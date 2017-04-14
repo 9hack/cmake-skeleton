@@ -5,6 +5,11 @@ set(VERSION_MAJOR 0)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 1)
 
+# Helpers
+macro (create_test target)
+  add_test (NAME ${target} COMMAND $<TARGET_FILE:${target}>)
+endmacro (create_test)
+
 # Define folders
 set(EXT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext)
 set(INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
@@ -13,13 +18,7 @@ set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
 # Make warnings into errors
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
-    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(warnings "-Wall -Wextra -Werror")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    set(warnings "/W4 /WX /EHsc")
-endif()
-set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${warnings}")
+set(warnings "-Wall -Wextra -Werror")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 
 # Output
@@ -58,5 +57,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
 enable_testing()
 file(GLOB TEST_SOURCES ${TEST_DIR}/*.cpp)
 add_executable(test_main ${TEST_SOURCES})
-target_link_libraries(test_main ${Catch_LIBRARY} ${LIBS})
-add_test(all_tests test_main)
+target_link_libraries(test_main ${LIBS})
+add_dependencies(test_main catch)
+create_test(test_main)
