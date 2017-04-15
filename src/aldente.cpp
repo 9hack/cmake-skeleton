@@ -12,7 +12,7 @@ void aldente() {
   asio::deadline_timer t(io, pst::seconds(1));
 
   int count = 0;
-  std::function<void (const bsys::error_code)> counter =
+  std::function<void (const bsys::error_code &)> counter =
     [&](const bsys::error_code &) {
       if (count < 5) {
         ++count;
