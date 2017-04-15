@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project(aldente)
 set(VERSION_MAJOR 0)
@@ -18,7 +18,8 @@ set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
 set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/lib)
 
-# Make warnings into errors
+# Compiler settings
+set(CMAKE_CXX_STANDARD 11)
 set(warnings "-Wall -Wextra -Werror")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${warnings}")
 
