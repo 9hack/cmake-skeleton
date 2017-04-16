@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include "aldente.hpp"
 
 using namespace std;
 
@@ -37,13 +38,13 @@ void to_unlisten(string x) {
   cout << "to_unlisten: " << x << endl;
 }
 
-void aldente() {
+int main() {
   auto string_event = EventManager<string>();
 
   string_event.listen(&to_listen);
   string_event.listen(&to_unlisten);
 
-  string_event.dispatch("hello");
+  string_event.dispatch(HELLO_WORLD);
   string_event.unlisten(&to_unlisten);
   string_event.dispatch("to_unlisten should be dead");
 
@@ -53,4 +54,6 @@ void aldente() {
   many_event.dispatch(1, 2);
   many_event.unlisten(&many_args);
   many_event.dispatch(3, 4);
+
+  return 0;
 }
