@@ -4,56 +4,42 @@
 
 using namespace std;
 
-template <class...Args>
-class EventManager {
-  typedef void (*cb_t)(Args...);
+template <class T>
+class Event {
+  typedef void (*cb_t)(T);
 
   public:
-    void listen(cb_t cb) {
+    void subscribe(cb_t cb) {
       callbacks.push_back(cb);
     }
 
-    void unlisten(cb_t cb) {
+    void unsubscribe(cb_t cb) {
       callbacks.remove(cb);
     }
 
-    void dispatch(Args... data) const {
+    void dispatch(T data) {
       for (cb_t cb : callbacks)
-        (*cb)(data...);
+        (*cb)(data);
     }
 
   private:
     list<cb_t> callbacks;
 };
 
-void many_args(int x, int y) {
-  cout << "many_args: " << x << ", " << y << endl;
-}
+struct PositionData {
+  int x;
+  int y;
+};
+auto PositionChangeEvent = Event<PositionData>();
 
-void to_listen(string x) {
-  cout << "to_listen: " << x << endl;
-}
-
-void to_unlisten(string x) {
-  cout << "to_unlisten: " << x << endl;
+void do_print(PositionData p) {
+  cout << "(" << p.x << ", " << p.y << ")" << endl;
 }
 
 int main() {
-  auto string_event = EventManager<string>();
-
-  string_event.listen(&to_listen);
-  string_event.listen(&to_unlisten);
-
-  string_event.dispatch(HELLO_WORLD);
-  string_event.unlisten(&to_unlisten);
-  string_event.dispatch("to_unlisten should be dead");
-
-  auto many_event = EventManager<int, int>();
-
-  many_event.listen(&many_args);
-  many_event.dispatch(1, 2);
-  many_event.unlisten(&many_args);
-  many_event.dispatch(3, 4);
-
+  PositionChangeEvent.subscribe(&do_print);
+  PositionChangeEvent.dispatch({
+    .y = 2,
+  });
   return 0;
 }

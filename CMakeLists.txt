@@ -40,26 +40,20 @@ include_directories(${Catch_INCLUDE_DIRS})
 find_package(Boost COMPONENTS system thread regex REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
-# Project
-set(PROJECT_LIBRARY ${CMAKE_PROJECT_NAME}-src)
-file(GLOB SOURCES ${SRC_DIR}/*.cpp)
-add_library(${PROJECT_LIBRARY} ${SOURCES})
-include_directories(${INC_DIR})
-
 # Libraries
 set(LIBS
-  ${PROJECT_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
   ${Boost_THREAD_LIBRARY}
   ${Boost_REGEX_LIBRARY})
 
 # Binaries
-add_executable(${CMAKE_PROJECT_NAME} main.cpp)
+file(GLOB_RECURSE SOURCES ${SRC_DIR}/*.cpp)
+add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBS})
 
 # Tests
 enable_testing()
-file(GLOB TEST_SOURCES ${TEST_DIR}/*.cpp)
+file(GLOB_RECURSE TEST_SOURCES ${TEST_DIR}/*.cpp)
 add_executable(run_tests ${TEST_SOURCES})
 target_link_libraries(run_tests ${LIBS})
 add_dependencies(run_tests catch)
